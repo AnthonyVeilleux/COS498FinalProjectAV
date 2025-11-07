@@ -1,0 +1,26 @@
+{
+  "name": "cos498midtermav",
+  "version": "1.0.0",
+  "description": "This is a read me test update... Does the vscode gui work?",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnthonyVeilleux/COS498MidtermAV.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AnthonyVeilleux/COS498MidtermAV/issues"
+  },
+  "homepage": "https://github.com/AnthonyVeilleux/COS498MidtermAV#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
