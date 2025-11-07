@@ -1,10 +1,115 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>My App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COS498 Midterm - Express Server</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Welcome to My App!</h1>
-    <p>This is a static page.</p>
+    <div class="container">
+        <header class="hero">
+            <div class="hero-content">
+                <h1 class="title">COS498 Midterm Project</h1>
+                <p class="subtitle">Express Server Running on Raspberry Pi</p>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Server Online</span>
+                </div>
+            </div>
+            <div class="hero-bg"></div>
+        </header>
+
+        <main class="content">
+            <section class="info-cards">
+                <div class="card">
+                    <div class="card-icon">🚀</div>
+                    <h3>Express Server</h3>
+                    <p>Node.js backend with REST API endpoints</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🔗</div>
+                    <h3>Network Access</h3>
+                    <p>Accessible locally and externally via port forwarding</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🛡️</div>
+                    <h3>Security Headers</h3>
+                    <p>Protected with modern security practices</p>
+                </div>
+            </section>
+
+            <section class="api-section">
+                <h2>API Endpoints</h2>
+                <div class="endpoint-list">
+                    <div class="endpoint">
+                        <div class="method">GET</div>
+                        <div class="path">/api</div>
+                        <div class="description">Returns server status and timestamp</div>
+                        <button class="test-btn" onclick="testAPI()">Test</button>
+                    </div>
+                </div>
+                <div class="api-response" id="apiResponse"></div>
+            </section>
+
+            <section class="server-info">
+                <h2>Server Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="label">Port:</span>
+                        <span class="value">25565</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Environment:</span>
+                        <span class="value">Production</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Framework:</span>
+                        <span class="value">Express.js</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Platform:</span>
+                        <span class="value">Raspberry Pi</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 COS498 Midterm Project - Anthony Veilleux</p>
+        </footer>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const responseDiv = document.getElementById('apiResponse');
+            responseDiv.innerHTML = '<div class="loading">Testing API...</div>';
+            
+            try {
+                const response = await fetch('/api');
+                const data = await response.json();
+                responseDiv.innerHTML = `
+                    <div class="response-success">
+                        <h4>✅ API Response:</h4>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                responseDiv.innerHTML = `
+                    <div class="response-error">
+                        <h4>❌ Error:</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Auto-update timestamp every 30 seconds
+        setInterval(() => {
+            const now = new Date().toLocaleString();
+            document.querySelector('.status-text').textContent = `Server Online - ${now}`;
+        }, 30000);
+    </script>
 </body>
 </html>

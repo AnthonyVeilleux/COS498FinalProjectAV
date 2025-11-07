@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx
+    container_name: my-nginx
+    ports:
+      - "25565:80"
+    volumes:
+      - ~/COS498MidtermAV/public:/usr/share/nginx/html
+    restart: unless-stopped

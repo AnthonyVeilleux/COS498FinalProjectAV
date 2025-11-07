@@ -28,6 +28,6 @@ app.use((req, res) => {
 // Start server
 // Note: We use '0.0.0.0' instead of 'localhost' because Docker containers
 // need to bind to all network interfaces to accept connections from outside the container
-app.listen(PORT, '67.247.87.224', () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });
