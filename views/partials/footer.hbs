@@ -1,0 +1,155 @@
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4> Epic Forum</h4>
+                <p>A simple authentication system demonstrating cookie-based sessions with Express.js and Handlebars.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/comments">Comments</a></li>
+                    {{#unless user.loggedIn}}
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Register</a></li>
+                    {{/unless}}
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Features</h4>
+                <ul class="footer-features">
+                    <li>✓ Secure Cookie Authentication</li>
+                    <li>✓ User Registration & Login</li>
+                    <li>✓ Session Management</li>
+                    <li>✓ Responsive Design</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-divider"></div>
+            <div class="footer-info">
+                <p>&copy; 2025 Epic Forum Application. Built with Express.js & Handlebars.</p>
+                <p class="footer-tech">
+                    <span class="tech-badge">Node.js</span>
+                    <span class="tech-badge">Express</span>
+                    <span class="tech-badge">Handlebars</span>
+                    <span class="tech-badge">Docker</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .footer {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        margin-top: auto;
+    }
+    
+    .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px 20px;
+    }
+    
+    .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .footer-section h4 {
+        color: #4CAF50;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+    }
+    
+    .footer-section p {
+        line-height: 1.6;
+        color: #bdc3c7;
+        margin-bottom: 10px;
+    }
+    
+    .footer-links, .footer-features {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-links li, .footer-features li {
+        margin-bottom: 8px;
+    }
+    
+    .footer-links a {
+        color: #bdc3c7;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+        color: #4CAF50;
+    }
+    
+    .footer-features li {
+        color: #bdc3c7;
+        font-size: 0.9em;
+    }
+    
+    .footer-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #4CAF50, transparent);
+        margin-bottom: 20px;
+    }
+    
+    .footer-bottom {
+        text-align: center;
+    }
+    
+    .footer-info p {
+        color: #95a5a6;
+        margin-bottom: 10px;
+    }
+    
+    .footer-tech {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .tech-badge {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4CAF50;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.8em;
+        font-weight: 500;
+        border: 1px solid rgba(76, 175, 80, 0.3);
+    }
+    
+    @media (max-width: 768px) {
+        .footer-container {
+            padding: 30px 15px 15px;
+        }
+        
+        .footer-content {
+            grid-template-columns: 1fr;
+            gap: 25px;
+            text-align: center;
+        }
+        
+        .footer-tech {
+            justify-content: center;
+        }
+        
+        .tech-badge {
+            font-size: 0.75em;
+            padding: 3px 10px;
+        }
+    }
+</style>

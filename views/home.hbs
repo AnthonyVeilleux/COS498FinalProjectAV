@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Forum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .user-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        .user-info h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .user-detail {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .user-detail strong {
+            color: #34495e;
+            display: inline-block;
+            width: 100px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn, .btn-link {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn:hover, .btn-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .info-section {
+            background: #e8f5e8;
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .info-section h3 {
+            color: #155724;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .info-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info-section li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .info-section li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 15px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {{> navbar}}
+    
+    <div class="main-content">
+        <div class="container">
+            <div class="header">
+                <h1>Epic Forum</h1>
+                <p>Secure User Authentication System</p>
+            </div>
+            
+            <div class="content">
+                <div class="user-info">
+                    <h2>👤 Current User Information</h2>
+                    <div class="user-detail">
+                        <strong>Name:</strong> {{user.name}}
+                    </div>
+                    <div class="user-detail">
+                        <strong>Status:</strong> {{user.msg}}
+                    </div>
+                    {{#if user.loggedIn}}
+                    <div class="user-detail">
+                        <strong>Login:</strong> <span style="color: #28a745;">✓ Authenticated</span>
+                    </div>
+                    {{else}}
+                    <div class="user-detail">
+                        <strong>Login:</strong> <span style="color: #dc3545;">✗ Guest</span>
+                    </div>
+                    {{/if}}
+                </div>
+
+                {{#unless user.loggedIn}}
+                <div class="actions">
+                    <a href="/login" class="btn btn-primary">🔐 Login</a>
+                    <a href="/register" class="btn btn-secondary">📝 Register</a>
+                </div>
+                {{/unless}}
+
+                <div class="info-section">
+                    <h3>✨ How It Works:</h3>
+                    <ul>
+                        <li>When you first visit, you're shown as "Guest"</li>
+                        <li>Click "Login" to authenticate with existing credentials</li>
+                        <li>Click "Register" to create a new account</li>
+                        <li>After authentication, your session persists!</li>
+                        <li>Add your own comments and interact with others!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{> footer}}
+</body>
+</html>
+</body>
+</html>
+

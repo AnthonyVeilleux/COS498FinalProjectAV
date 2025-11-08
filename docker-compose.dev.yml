@@ -9,31 +9,19 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=25565
+    ports:
+      - "25565:25565"  # Expose Node.js directly
     volumes:
       # Mount source code for hot reloading
       - ./backend:/app
+      # Mount static files for live updates
+      - ./public:/app/public
+      # Mount views directory
+      - ./views:/app/views
       # Prevent node_modules from being overwritten
       - /app/node_modules
     networks:
       - app-network
-
-  # nginx reverse proxy with volume mounting for static files
-  nginx:
-    image: nginx:alpine
-    container_name: nginx-dev
-    restart: unless-stopped
-    ports:
-      - "25565:80"
-    volumes:
-      # Mount nginx config for live updates
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-      # Mount static files for live updates
-      - ./nginx/public:/usr/share/nginx/html:ro
-    depends_on:
-      - backend-nodejs
-    networks:
-      - app-network
-    command: ["/bin/sh", "-c", "nginx -g 'daemon off;'"]
 
 networks:
   app-network:

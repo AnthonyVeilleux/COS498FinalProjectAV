@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Epic Forum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .register-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .register-header {
+            background: linear-gradient(135deg, #ff7b7b 0%, #f06292 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .register-header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .register-form {
+            padding: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff7b7b;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 123, 123, 0.1);
+        }
+        
+        .form-group input::placeholder {
+            color: #adb5bd;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ff7b7b 0%, #f06292 100%);
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            padding: 15px 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .register-footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .register-footer a {
+            color: #ff7b7b;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .register-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .input-icon {
+            position: relative;
+        }
+        
+        .input-icon input {
+            padding-left: 45px;
+        }
+        
+        .input-icon::before {
+            content: "";
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background-size: contain;
+            z-index: 1;
+        }
+        
+        .input-icon.user::before {
+            content: "👤";
+        }
+        
+        .input-icon.password::before {
+            content: "🔒";
+        }
+        
+        .info-box {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            color: #0c5460;
+        }
+        
+        .info-box h4 {
+            margin-bottom: 8px;
+            color: #0a4c57;
+        }
+        
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info-box li {
+            padding: 2px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 14px;
+        }
+        
+        .info-box li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    {{> navbar}}
+    
+    <div class="main-content">
+        <div class="register-container">
+            <div class="register-header">
+                <h1>📝 Register</h1>
+                <p>Create your account</p>
+            </div>
+            
+            <form method="POST" action="/register" class="register-form">
+                <div class="info-box">
+                    <h4>Test Accounts Available:</h4>
+                    <ul>
+                        <li>steve / steve123</li>
+                        <li>john / john123</li>
+                        <li>brandon / brandon123</li>
+                    </ul>
+                </div>
+                
+                <div class="form-group">
+                    <label for="name">Username</label>
+                    <div class="input-icon user">
+                        <input type="text" id="name" name="name" placeholder="Choose a username" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-icon password">
+                        <input type="password" id="password" name="password" placeholder="Create a password" required>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <a href="/" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+            
+            <div class="register-footer">
+                <p>Already have an account? <a href="/login">Login here</a></p>
+            </div>
+        </div>
+    </div>
+    
+    {{> footer}}
+</body>
+</html>
+</body>
+</html>
+
