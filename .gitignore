@@ -111,3 +111,10 @@ Thumbs.db
 
 # Custom scripts that shouldn't be committed
 get-docker.sh
+
+# Nginx Proxy Manager data
+nginx/data/
+nginx/letsencrypt/
+*.sqlite
+keys.json
+*.conf

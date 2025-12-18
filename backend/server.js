@@ -4,7 +4,7 @@ const path = require('path');
 const hbs = require('hbs');
 const cookieParser = require('cookie-parser');
 
-const PORT = 25565;
+const PORT = 80 ;
 
 // Set view engine and views directory
 app.set('view engine', 'hbs');

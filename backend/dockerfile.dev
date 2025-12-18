@@ -13,7 +13,7 @@ RUN npm install && npm install -g nodemon
 COPY . .
 
 # Expose port (internal to container network)
-EXPOSE 25565
+EXPOSE 80
 
 # Start the application with nodemon for auto-reloading
 CMD ["nodemon", "--watch", ".", "--ext", "js,json", "server.js"]
