@@ -33,5 +33,3 @@ sudo docker compose -f docker-compose.dev.yml up -d
 ```bash
 sudo docker compose down
 ```
-
-That's it! 🚀
