@@ -1,11 +1,25 @@
 <div class="comment-item">
     <div class="comment-header">
         <div class="comment-author">
-            <span class="author-avatar">👤</span>
+            <span class="author-avatar">{{profileAvatar}}</span>
             <span class="author-name">{{author}}</span>
+            {{#if isEdited}}
+                <span class="edited-indicator" title="This comment has been edited">✏️ Edited</span>
+            {{/if}}
         </div>
-        <div class="comment-date">
-            {{formatDate createdAt}}
+        <div class="comment-meta">
+            <div class="comment-date">
+                {{formatDate createdAt}}
+                {{#if isEdited}}
+                    <span class="edit-date">(edited {{formatDate updatedAt}})</span>
+                {{/if}}
+            </div>
+            {{#if canEdit}}
+                <div class="comment-actions">
+                    <a href="/comments/edit/{{id}}" class="btn-edit" title="Edit comment">✏️</a>
+                    <button onclick="deleteComment({{id}})" class="btn-delete" title="Delete comment">🗑️</button>
+                </div>
+            {{/if}}
         </div>
     </div>
     <div class="comment-body">
@@ -68,6 +82,65 @@
         font-style: italic;
     }
     
+    .comment-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+    }
+    
+    .edit-date {
+        display: block;
+        font-size: 0.8em;
+        color: #868e96;
+        font-style: italic;
+    }
+    
+    .edited-indicator {
+        background: #fff3cd;
+        color: #856404;
+        font-size: 0.75em;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-left: 8px;
+        border: 1px solid #ffeaa7;
+    }
+    
+    .comment-actions {
+        display: flex;
+        gap: 8px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .comment-item:hover .comment-actions {
+        opacity: 1;
+    }
+    
+    .btn-edit, .btn-delete {
+        background: none;
+        border: none;
+        font-size: 1.1em;
+        cursor: pointer;
+        padding: 4px 6px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn-edit:hover {
+        background: #e3f2fd;
+        transform: scale(1.1);
+    }
+    
+    .btn-delete:hover {
+        background: #ffebee;
+        transform: scale(1.1);
+    }
+    
     .comment-body {
         margin-top: 10px;
     }
@@ -107,3 +180,29 @@
         }
     }
 </style>
+
+<script>
+function deleteComment(commentId) {
+    if (confirm('Are you sure you want to delete this comment? This action cannot be undone.')) {
+        fetch(`/comments/delete/${commentId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Reload the page to show updated comments
+                window.location.reload();
+            } else {
+                alert('Error deleting comment: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting comment');
+        });
+    }
+}
+</script>

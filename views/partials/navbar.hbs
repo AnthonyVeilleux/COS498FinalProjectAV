@@ -7,11 +7,14 @@
         <div class="nav-menu">
             <div class="nav-center">
                 <a href="/comments" class="nav-link">💬 Comments</a>
+                <a href="/chat" class="nav-link">🚀 Live Chat</a>
             </div>
             
             {{#if user.loggedIn}}
                 <div class="nav-user">
-                    <span class="user-greeting">Hello, {{user.name}}!</span>
+                    <a href="/profile" class="nav-link">⚙️ Profile</a>
+                    <button id="pokeBtn" class="btn-poke">👋 Poke Anthony!</button>
+                    <span class="user-greeting">Hello, {{user.displayName}}{{user.username}}!</span>
                     <form method="POST" action="/logout" class="nav-logout">
                         <button type="submit" class="btn-logout">Logout</button>
                     </form>
@@ -124,6 +127,29 @@
         transform: translateY(-1px);
     }
     
+    .btn-poke {
+        background: #f39c12;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-poke:hover {
+        background: #e67e22;
+        transform: translateY(-1px);
+    }
+    
+    .btn-poke:disabled {
+        background: #95a5a6;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
     @media (max-width: 768px) {
         .nav-container {
             padding: 0 15px;
@@ -147,9 +173,61 @@
             padding: 8px 12px;
         }
         
-        .btn-logout {
+        .btn-logout, .btn-poke {
             padding: 8px 15px;
             font-size: 0.9em;
         }
     }
 </style>
+
+<script>
+// Poke button functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const pokeBtn = document.getElementById('pokeBtn');
+  
+  if (pokeBtn) {
+    pokeBtn.addEventListener('click', async function() {
+      // Disable button and show loading state
+      const originalText = this.innerHTML;
+      this.innerHTML = '⏳ Sending...';
+      this.disabled = true;
+      
+      try {
+        const response = await fetch('/send-poke', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // Show success message
+          this.innerHTML = '✅ Sent!';
+          setTimeout(() => {
+            this.innerHTML = originalText;
+            this.disabled = false;
+          }, 2000);
+        } else {
+          // Show error message
+          this.innerHTML = '❌ Failed';
+          setTimeout(() => {
+            this.innerHTML = originalText;
+            this.disabled = false;
+          }, 2000);
+          console.error('Poke failed:', data.message);
+        }
+      } catch (error) {
+        // Show error message
+        this.innerHTML = '❌ Error';
+        setTimeout(() => {
+          this.innerHTML = originalText;
+          this.disabled = false;
+        }, 2000);
+        console.error('Poke error:', error);
+      }
+    });
+  }
+});
+</script>

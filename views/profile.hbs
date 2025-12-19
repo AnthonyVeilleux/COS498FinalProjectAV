@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings - Epic Forum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .profile-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #6c5ce7;
+        }
+        
+        .profile-section h2 {
+            color: #2c3436;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+        
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #6c757d;
+        }
+        
+        /* Avatar selection styles */
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .avatar-grid input[type="radio"] {
+            display: none;
+        }
+        
+        .avatar-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border: 3px solid #e9ecef;
+            border-radius: 50%;
+            background: #f8f9fa;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0;
+            text-align: center;
+            line-height: 1;
+        }
+        
+        .avatar-option:hover {
+            border-color: #6c5ce7;
+            background: #f0f0ff;
+            transform: scale(1.05);
+        }
+        
+        .avatar-grid input[type="radio"]:checked + .avatar-option {
+            border-color: #6c5ce7;
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+        }
+        
+        .avatar-option.default-avatar {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+        }
+        
+        .avatar-grid input[type="radio"]:checked + .avatar-option.default-avatar {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 5px 15px rgba(149, 165, 166, 0.3);
+        }
+        
+        .alert {
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .current-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .current-info h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        
+        .current-info p {
+            margin-bottom: 5px;
+            color: #424242;
+        }
+        
+        .password-requirements {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        
+        .password-requirements h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .password-requirements ul {
+            color: #856404;
+            margin-left: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 15px;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .profile-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {{> navbar}}
+    
+    <div class="main-content">
+        <div class="container">
+            <div class="header">
+                <h1>Profile Settings</h1>
+                <p>Manage your account information and preferences</p>
+            </div>
+            
+            <div class="content">
+                <!-- Display current user info -->
+                <div class="current-info">
+                    <h3>Current Account Information</h3>
+                    <p><strong>Username:</strong> {{user.username}}</p>
+                    <p><strong>Display Name:</strong> {{user.displayName}}</p>
+                    <p><strong>Email:</strong> {{user.email}}</p>
+                </div>
+
+                <!-- Display any messages -->
+                {{#if successMessage}}
+                    <div class="alert alert-success">
+                        {{successMessage}}
+                    </div>
+                {{/if}}
+                
+                {{#if errorMessage}}
+                    <div class="alert alert-error">
+                        {{errorMessage}}
+                    </div>
+                {{/if}}
+
+                <!-- Update Display Name -->
+                <div class="profile-section">
+                    <h2>📝 Update Display Name</h2>
+                    <form method="POST" action="/profile/update-display-name">
+                        <div class="form-group">
+                            <label for="displayName">New Display Name</label>
+                            <input type="text" id="displayName" name="displayName" value="{{user.displayName}}" required>
+                            <small>This is the name other users will see in comments and posts</small>
+                        </div>
+                        <button type="submit" class="btn">Update Display Name</button>
+                    </form>
+                </div>
+
+                <!-- Update Avatar -->
+                <div class="profile-section">
+                    <h2>😊 Choose Avatar Emoji</h2>
+                    <form method="POST" action="/profile/update-avatar">
+                        <div class="form-group">
+                            <label for="avatar">Select Your Avatar</label>
+                            <div class="avatar-grid">
+                                <input type="radio" id="avatar-1" name="avatar" value="😊" {{#if (eq user.profileAvatar "😊")}}checked{{/if}}>
+                                <label for="avatar-1" class="avatar-option">😊</label>
+                                
+                                <input type="radio" id="avatar-2" name="avatar" value="😎" {{#if (eq user.profileAvatar "😎")}}checked{{/if}}>
+                                <label for="avatar-2" class="avatar-option">😎</label>
+                                
+                                <input type="radio" id="avatar-3" name="avatar" value="🤓" {{#if (eq user.profileAvatar "🤓")}}checked{{/if}}>
+                                <label for="avatar-3" class="avatar-option">🤓</label>
+                                
+                                <input type="radio" id="avatar-4" name="avatar" value="😴" {{#if (eq user.profileAvatar "😴")}}checked{{/if}}>
+                                <label for="avatar-4" class="avatar-option">😴</label>
+                                
+                                <input type="radio" id="avatar-5" name="avatar" value="🤩" {{#if (eq user.profileAvatar "🤩")}}checked{{/if}}>
+                                <label for="avatar-5" class="avatar-option">🤩</label>
+                                
+                                <input type="radio" id="avatar-6" name="avatar" value="🥳" {{#if (eq user.profileAvatar "🥳")}}checked{{/if}}>
+                                <label for="avatar-6" class="avatar-option">🥳</label>
+                                
+                                <input type="radio" id="avatar-7" name="avatar" value="🤖" {{#if (eq user.profileAvatar "🤖")}}checked{{/if}}>
+                                <label for="avatar-7" class="avatar-option">🤖</label>
+                                
+                                <input type="radio" id="avatar-8" name="avatar" value="👻" {{#if (eq user.profileAvatar "👻")}}checked{{/if}}>
+                                <label for="avatar-8" class="avatar-option">👻</label>
+                                
+                                <input type="radio" id="avatar-9" name="avatar" value="🦊" {{#if (eq user.profileAvatar "🦊")}}checked{{/if}}>
+                                <label for="avatar-9" class="avatar-option">🦊</label>
+                                
+                                <input type="radio" id="avatar-10" name="avatar" value="🐱" {{#if (eq user.profileAvatar "🐱")}}checked{{/if}}>
+                                <label for="avatar-10" class="avatar-option">🐱</label>
+                                
+                                <input type="radio" id="avatar-11" name="avatar" value="🐶" {{#if (eq user.profileAvatar "🐶")}}checked{{/if}}>
+                                <label for="avatar-11" class="avatar-option">🐶</label>
+                                
+                                <input type="radio" id="avatar-12" name="avatar" value="🚀" {{#if (eq user.profileAvatar "🚀")}}checked{{/if}}>
+                                <label for="avatar-12" class="avatar-option">🚀</label>
+                                
+                                <input type="radio" id="avatar-default" name="avatar" value="" {{#unless user.profileAvatar}}checked{{/unless}}>
+                                <label for="avatar-default" class="avatar-option default-avatar">👤</label>
+                            </div>
+                            <small>Choose an emoji to represent you in comments and chat</small>
+                        </div>
+                        <button type="submit" class="btn">Update Avatar</button>
+                    </form>
+                </div>
+
+                <!-- Update Email -->
+                <div class="profile-section">
+                    <h2>📧 Update Email Address</h2>
+                    <form method="POST" action="/profile/update-email">
+                        <div class="form-group">
+                            <label for="currentPasswordEmail">Current Password</label>
+                            <input type="password" id="currentPasswordEmail" name="currentPassword" required>
+                            <small>Enter your current password to verify your identity</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newEmail">New Email Address</label>
+                            <input type="email" id="newEmail" name="newEmail" value="{{user.email}}" required>
+                            <small>Used for account recovery and notifications</small>
+                        </div>
+                        <button type="submit" class="btn">Update Email</button>
+                    </form>
+                </div>
+
+                <!-- Change Password -->
+                <div class="profile-section">
+                    <h2>🔐 Change Password</h2>
+                    <form method="POST" action="/profile/change-password">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" name="currentPassword" required>
+                            <small>Enter your current password to verify your identity</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" name="newPassword" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+                        
+                        <div class="password-requirements">
+                            <h4>Password Requirements:</h4>
+                            <ul>
+                                <li>At least 8 characters long</li>
+                                <li>Contains at least one uppercase letter</li>
+                                <li>Contains at least one lowercase letter</li>
+                                <li>Contains at least one number</li>
+                                <li>Contains at least one special character (!@#$%^&*)</li>
+                            </ul>
+                        </div>
+                        
+                        <button type="submit" class="btn">Change Password</button>
+                    </form>
+                </div>
+
+                <!-- Navigation buttons -->
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="/" class="btn btn-secondary">🏠 Back to Home</a>
+                    <a href="/comments" class="btn btn-secondary">💬 View Comments</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{> footer}}
+    
+    <script>
+        // Password confirmation validation
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = this.value;
+            
+            if (newPassword !== confirmPassword) {
+                this.setCustomValidity('Passwords do not match');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+        
+        // Display success message for a few seconds
+        const successAlert = document.querySelector('.alert-success');
+        if (successAlert) {
+            setTimeout(() => {
+                successAlert.style.opacity = '0';
+                setTimeout(() => successAlert.remove(), 300);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Chat - Epic Forum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .chat-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid rgba(255,255,255,0.1);
+        }
+        
+        .chat-header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+        
+        .chat-status {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .online-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #2ecc71;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            animation: messageSlide 0.3s ease-out;
+        }
+        
+        @keyframes messageSlide {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .message.own {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            margin-left: 50px;
+        }
+        
+        .message.system {
+            background: #e3f2fd;
+            color: #1976d2;
+            text-align: center;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+        
+        .message-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            gap: 8px;
+        }
+        
+        .message-user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .message-avatar {
+            font-size: 18px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .message.own .message-avatar {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .user-avatar {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+        
+        .username {
+            font-weight: 600;
+            font-size: 0.9em;
+            flex: 1;
+        }
+        
+        .timestamp {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-left: auto;
+        }
+        
+        .message.own .timestamp {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .message-text {
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+        
+        .chat-input-container {
+            background: white;
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .chat-form {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+        
+        .send-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+        
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .send-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .typing-indicator {
+            padding: 10px 20px;
+            font-style: italic;
+            color: #6c757d;
+            font-size: 0.9em;
+            background: rgba(108, 117, 125, 0.1);
+            border-radius: 10px;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .connection-status.connected {
+            background: #2ecc71;
+        }
+        
+        .connection-status.disconnected {
+            background: #e74c3c;
+        }
+        
+        .connection-status.connecting {
+            background: #f39c12;
+        }
+        
+        /* Scrollbar styling */
+        .messages-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .messages-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .messages-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        
+        .messages-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 10px;
+            }
+            
+            .chat-container {
+                height: 90vh;
+            }
+            
+            .message.own {
+                margin-left: 20px;
+            }
+            
+            .chat-form {
+                flex-direction: row;
+            }
+            
+            .send-btn {
+                min-width: 60px;
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {{> navbar}}
+    
+    <div class="main-content">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h1>💬 Live Chat</h1>
+                <div class="chat-status">
+                    <span class="online-indicator"></span>
+                    <span id="connectionStatus">Connected to Epic Forum Chat</span>
+                </div>
+            </div>
+            
+            <div class="messages-container" id="messagesContainer">
+                {{#each messages}}
+                <div class="message {{#if (eq this.user_id ../user.id)}}own{{/if}}" data-message-id="{{this.id}}" data-user-id="{{this.user_id}}">
+                    <div class="message-header">
+                        <div class="message-user-info">
+                            <span class="message-avatar">{{#if this.profile_avatar}}{{this.profile_avatar}}{{else}}👤{{/if}}</span>
+                            <span class="username" style="color: {{this.profile_color}}">
+                                {{this.display_name}}
+                            </span>
+                        </div>
+                        <span class="timestamp">{{formatDate this.created_at}}</span>
+                    </div>
+                    <div class="message-text">{{this.message}}</div>
+                </div>
+                {{/each}}
+                
+                <div class="typing-indicator" id="typingIndicator">
+                    Someone is typing...
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <form class="chat-form" id="chatForm">
+                    <input type="text" class="chat-input" id="messageInput" 
+                           placeholder="Type your message..." 
+                           maxlength="500" 
+                           autocomplete="off">
+                    <button type="submit" class="send-btn" id="sendBtn">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="connection-status connecting" id="connectionIndicator">
+        Connecting...
+    </div>
+    
+    {{> footer}}
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    // Chat functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const socket = io();
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const chatForm = document.getElementById('chatForm');
+        const sendBtn = document.getElementById('sendBtn');
+        const connectionIndicator = document.getElementById('connectionIndicator');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const typingIndicator = document.getElementById('typingIndicator');
+        
+        // User data
+        const userData = {
+            id: {{user.id}},
+            username: '{{user.username}}',
+            displayName: '{{user.displayName}}',
+            profileColor: '{{user.profileColor}}',
+            profileAvatar: '{{user.profileAvatar}}'
+        };
+        
+        let isConnected = false;
+        let typingTimer;
+        
+        // Socket connection events
+        socket.on('connect', () => {
+            console.log('Connected to chat server');
+            isConnected = true;
+            updateConnectionStatus('connected', 'Connected to Live Chat');
+            
+            // Join the chat room
+            socket.emit('join-chat', userData);
+        });
+        
+        socket.on('disconnect', () => {
+            console.log('Disconnected from chat server');
+            isConnected = false;
+            updateConnectionStatus('disconnected', 'Disconnected - Reconnecting...');
+        });
+        
+        socket.on('connect_error', (error) => {
+            console.error('Connection error:', error);
+            updateConnectionStatus('disconnected', 'Connection Error');
+        });
+        
+        // Chat events
+        socket.on('new-message', (messageData) => {
+            addMessageToChat(messageData);
+            scrollToBottom();
+        });
+        
+        // Handle message sent confirmation for sender
+        socket.on('message-sent', (messageData) => {
+            addMessageToChat(messageData);
+            scrollToBottom();
+        });
+        
+        socket.on('user-joined', (data) => {
+            addSystemMessage(`${data.username} joined the chat`, data.timestamp);
+        });
+        
+        socket.on('user-left', (data) => {
+            addSystemMessage(`${data.username} left the chat`, data.timestamp);
+        });
+        
+        // Handle avatar updates
+        socket.on('avatar-updated', (data) => {
+            updateUserAvatarInChat(data.userId, data.newAvatar);
+            
+            // If it's the current user, update their avatar in userData
+            if (data.userId === userData.id) {
+                userData.profileAvatar = data.newAvatar;
+            }
+        });
+        
+        // Form submission
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const message = messageInput.value.trim();
+            if (message && isConnected) {
+                // Send message to server
+                socket.emit('chat-message', {
+                    message: message,
+                    userId: userData.id
+                });
+                
+                // Clear input
+                messageInput.value = '';
+                sendBtn.disabled = true;
+                sendBtn.textContent = 'Sent';
+                
+                setTimeout(() => {
+                    sendBtn.disabled = false;
+                    sendBtn.textContent = 'Send';
+                }, 1000);
+            }
+        });
+        
+        // Input validation
+        messageInput.addEventListener('input', () => {
+            const message = messageInput.value.trim();
+            sendBtn.disabled = !message || !isConnected;
+        });
+        
+        // Functions
+        function updateConnectionStatus(status, text) {
+            connectionIndicator.className = `connection-status ${status}`;
+            connectionStatus.textContent = text;
+            
+            if (status === 'connected') {
+                setTimeout(() => {
+                    connectionIndicator.style.display = 'none';
+                }, 3000);
+            } else {
+                connectionIndicator.style.display = 'block';
+            }
+        }
+        
+        function addMessageToChat(messageData) {
+            const messageDiv = document.createElement('div');
+            const isOwn = messageData.user_id === userData.id;
+            
+            messageDiv.className = `message ${isOwn ? 'own' : ''}`;
+            messageDiv.setAttribute('data-message-id', messageData.id);
+            messageDiv.setAttribute('data-user-id', messageData.user_id);
+            
+            const timestamp = new Date(messageData.created_at).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            messageDiv.innerHTML = `
+                <div class="message-header">
+                    <div class="message-user-info">
+                        <span class="message-avatar">${messageData.profile_avatar || '👤'}</span>
+                        <span class="username" style="color: ${messageData.profile_color}">
+                            ${messageData.display_name}
+                        </span>
+                    </div>
+                    <span class="timestamp">${timestamp}</span>
+                </div>
+                <div class="message-text">${escapeHtml(messageData.message)}</div>
+            `;
+            
+            messagesContainer.insertBefore(messageDiv, typingIndicator);
+        }
+        
+        function addSystemMessage(text, timestamp) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message system';
+            
+            const time = new Date(timestamp).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            messageDiv.innerHTML = `${text} at ${time}`;
+            messagesContainer.insertBefore(messageDiv, typingIndicator);
+            scrollToBottom();
+        }
+        
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function updateUserAvatarInChat(userId, newAvatar) {
+            // Find all messages from this user and update their avatars
+            const userMessages = messagesContainer.querySelectorAll(`[data-user-id="${userId}"]`);
+            
+            userMessages.forEach(messageElement => {
+                const avatarElement = messageElement.querySelector('.message-avatar');
+                if (avatarElement) {
+                    avatarElement.textContent = newAvatar || '👤';
+                }
+            });
+        }
+        
+        // Initial scroll to bottom
+        scrollToBottom();
+        
+        // Focus on input
+        messageInput.focus();
+    });
+    </script>
+</body>
+</html>

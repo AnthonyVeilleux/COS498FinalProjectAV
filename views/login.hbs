@@ -181,13 +181,23 @@
             <div class="login-header">
                 <h1>🔐 Login</h1>
                 <p>Access your account</p>
+                {{#if resetSuccess}}
+                <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #c3e6cb;">
+                    ✅ <strong>Password Reset Successful!</strong> You can now log in with your new password.
+                </div>
+                {{/if}}
+                {{#if error}}
+                <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #f5c6cb;">
+                    ❌ <strong>Login Failed:</strong> {{error}}
+                </div>
+                {{/if}}
             </div>
             
-            <form method="POST" action="/login" class="login-form">
+            <form method="POST" action="/api/auth/login" class="login-form">
                 <div class="form-group">
-                    <label for="name">Username</label>
+                    <label for="username">Username</label>
                     <div class="input-icon user">
-                        <input type="text" id="name" name="name" placeholder="Enter your username" required>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
                     </div>
                 </div>
                 
@@ -204,6 +214,19 @@
                 </div>
             </form>
             
+            <div class="forgot-password-section" style="padding: 0 40px 20px 40px;">
+                <hr style="margin: 20px 0; border: 1px solid #e9ecef;">
+                <p style="text-align: center; margin-bottom: 20px; color: #6c757d;">Forgot your password?</p>
+                <form id="forgotPasswordForm" class="forgot-password-form">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <input type="email" id="resetEmail" placeholder="Enter your email address" required 
+                               style="width: 100%; padding: 12px; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 14px;">
+                    </div>
+                    <button type="submit" class="btn btn-secondary" style="width: 100%; padding: 12px;">Send Reset Link</button>
+                </form>
+                <div id="resetMessage" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px; font-size: 14px;"></div>
+            </div>
+            
             <div class="login-footer">
                 <p>Don't have an account? <a href="/register">Register here</a></p>
             </div>
@@ -211,8 +234,62 @@
     </div>
     
     {{> footer}}
-</body>
-</html>
+    
+    <script>
+    // Forgot password form handling
+    document.addEventListener('DOMContentLoaded', function() {
+        const forgotForm = document.getElementById('forgotPasswordForm');
+        if (forgotForm) {
+            forgotForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('resetEmail').value;
+                const messageDiv = document.getElementById('resetMessage');
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending...';
+                messageDiv.style.display = 'none';
+                
+                try {
+                    const response = await fetch('/api/auth/forgot-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email: email })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    messageDiv.style.display = 'block';
+                    if (result.success) {
+                        messageDiv.style.background = '#d4edda';
+                        messageDiv.style.color = '#155724';
+                        messageDiv.style.border = '1px solid #c3e6cb';
+                        messageDiv.textContent = result.message;
+                        document.getElementById('resetEmail').value = '';
+                    } else {
+                        messageDiv.style.background = '#f8d7da';
+                        messageDiv.style.color = '#721c24';
+                        messageDiv.style.border = '1px solid #f5c6cb';
+                        messageDiv.textContent = result.message;
+                    }
+                } catch (error) {
+                    messageDiv.style.display = 'block';
+                    messageDiv.style.background = '#f8d7da';
+                    messageDiv.style.color = '#721c24';
+                    messageDiv.style.border = '1px solid #f5c6cb';
+                    messageDiv.textContent = 'Error sending reset email. Please try again.';
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send Reset Link';
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>
 
