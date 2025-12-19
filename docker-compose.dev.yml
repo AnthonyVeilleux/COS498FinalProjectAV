@@ -9,17 +9,39 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=80
-    ports:
-      - "80:80"  # Expose Node.js directly
+      - GMAIL_USER=${GMAIL_USER}
+      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD}
     volumes:
       # Mount source code for hot reloading
       - ./backend:/app
       # Mount static files for live updates
-      - ./public:/app/public
+      - ./backend/public:/app/public
       # Mount views directory
       - ./views:/app/views
       # Prevent node_modules from being overwritten
       - /app/node_modules
+      # Persist database files
+      - ./backend/data:/app/data
+    # Expose port for direct access during development
+    ports:
+      - "3000:80"  # Expose on different port to avoid conflict with nginx
+    networks:
+      - app-network
+
+  # nginx reverse proxy
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: nginx-proxy-manager-dev
+    restart: unless-stopped
+    ports:
+      - '80:80'      # HTTP traffic
+      - '443:443'    # HTTPS traffic
+      - '5001:81'    # Admin web interface
+    volumes:
+      - ./nginx/data:/data
+      - ./nginx/letsencrypt:/etc/letsencrypt
+    depends_on:
+      - backend-nodejs
     networks:
       - app-network
 

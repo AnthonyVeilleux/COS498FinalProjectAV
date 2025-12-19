@@ -9,6 +9,10 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=80
+      - GMAIL_USER=${GMAIL_USER}
+      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD}
+    volumes:
+      - ./backend/data:/app/data  # Persist database files
     # No ports exposed - only nginx can access this container
     networks:
       - app-network
